@@ -149,7 +149,7 @@ enum AnisetteProvider {
         }
 
         // One-time purge so Mac ADI can create a fresh identity
-        let migKey = "AnisetteMacADI.purgeAdi.v2"
+        let migKey = "AnisetteMacADI.purgeAdi.identityConsistency.v1"
         if !UserDefaults.standard.bool(forKey: migKey) {
             AnisetteConfigManager.shared.anisetteAdiBlob = nil
             UserDefaults.standard.set(true, forKey: migKey)
@@ -308,7 +308,7 @@ enum AnisetteProvider {
             gsConfig.grandSlam.userAgent = resolved.userAgent
             gsConfig.appleAuth.userAgent = resolved.userAgent
         }
-        DeveloperPortal.shared.customHeaders = SideSignConfigManager.sanitizeForGrandSlam(gsConfig)
+        DeveloperPortal.shared.customHeaders = gsConfig
 
         let (anisetteData, newAdiBlob) = try await provider.fetchAnisetteDataWithFailover(
             servers: isAutoEnabled ? ordered : [ordered[startIndex]],

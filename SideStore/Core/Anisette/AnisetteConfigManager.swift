@@ -131,8 +131,8 @@ public actor AnisetteConfigManager {
         }()
 
         var resolvedClientInfo = (udClientInfo?.isEmpty == false ? udClientInfo : fileConfig?.clientInfo) ?? AppConstants.Anisette.defaultClientInfo
-        if resolvedClientInfo.contains("Pixel") || resolvedClientInfo.contains("Android") || resolvedClientInfo.contains("MacBookPro18,3") || resolvedClientInfo.contains("macOS;26.6") || resolvedClientInfo.contains("dt.Xcode") {
-            debugLog("[AnisetteConfigManager] Migrating legacy/blocked client_info to Windows default")
+        if resolvedClientInfo.contains("Pixel") || resolvedClientInfo.contains("Android") || resolvedClientInfo.contains("dt.Xcode") {
+            debugLog("[AnisetteConfigManager] Migrating legacy client_info to the default identity")
             resolvedClientInfo = AppConstants.Anisette.defaultClientInfo
             if udClientInfo != nil {
                 ud.customAnisetteClientInfo = resolvedClientInfo
