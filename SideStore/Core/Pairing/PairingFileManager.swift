@@ -58,7 +58,6 @@ final class PairingFileManager: NSObject {
     }
 
     nonisolated func hasPairingFile() -> Bool {
-        guard !UserDefaults.standard.isPairingReset else { return false }
         if let target = preferredProtocol, hasPairingFile(for: target) {
             return true
         }
@@ -106,7 +105,7 @@ final class PairingFileManager: NSObject {
     }
 
     nonisolated func fetchPairingFile(preferred: PairingProtocol? = nil) -> String? {
-        guard !UserDefaults.standard.isPairingReset else { return nil }
+        // A file copied into Documents must not be hidden by a stale reset flag.
         let targetPreferred = preferred ?? preferredProtocol
         if let targetPreferred, let contents = fetchPairingFile(for: targetPreferred) {
             return contents
