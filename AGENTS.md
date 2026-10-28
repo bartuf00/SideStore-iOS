@@ -1,5 +1,9 @@
 # Agent Guidelines for SideStore
 
+## Fork-specific notes
+
+- Preserve the existing recommended sources. The standalone LiveContainer source is `https://github.com/LiveContainer/LiveContainer/releases/download/1.0/apps.json` (bundle ID `com.kdt.livecontainer`); keep it distinct from the combined `LiveContainer+SideStore.ipa` release. It is added automatically to My Sources by `AppManager.addDefaultLiveContainerSourceIfNeeded()`.
+
 A file for [guiding AI coding agents](https://agents.md/).
 
 ## Project Overview

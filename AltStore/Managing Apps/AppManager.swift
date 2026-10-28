@@ -187,6 +187,17 @@ final class AppManager: ObservableObject, @unchecked Sendable
         }
     }
     
+    func addDefaultLiveContainerSourceIfNeeded() async throws
+    {
+        let context = DatabaseManager.shared.persistentContainer.newBackgroundContext()
+        let source = try await self.fetchSource(sourceURL: AppConstants.Sources.liveContainerSourceURL, managedObjectContext: context)
+        guard try await !source.isAdded() else { return }
+        try await context.performAsync {
+            try context.save()
+        }
+        NotificationCenter.default.post(name: AppManager.didAddSourceNotification, object: source)
+    }
+
     func fetchSources() async throws -> (Set<Source>, NSManagedObjectContext)
     {
         try await withCheckedThrowingContinuation { continuation in
@@ -379,9 +390,15 @@ final class AppManager: ObservableObject, @unchecked Sendable
     
     func updateAllSources(completion: @escaping (Result<Void, Error>) -> Void)
     {
-        self.updateSourcesResult = nil
-        
-        self.fetchSources() { (result) in
+        Task.detached(priority: .utility) {
+            do {
+                try await self.addDefaultLiveContainerSourceIfNeeded()
+            } catch {
+                debugLog("[AppManager] Failed to add default LiveContainer source: \(error.localizedDescription)")
+            }
+
+            self.updateSourcesResult = nil
+            self.fetchSources() { (result) in
             do
             {
                 // Check if the result is failure and rethrow
@@ -437,6 +454,7 @@ final class AppManager: ObservableObject, @unchecked Sendable
                     self.updateSourcesResult = .failure(error)
                     completion(.failure(error))
                 }
+            }
             }
         }
     }
