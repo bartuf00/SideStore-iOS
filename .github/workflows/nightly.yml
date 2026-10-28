@@ -14,6 +14,10 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+# Allow the workflow to create and upload GitHub releases.
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
